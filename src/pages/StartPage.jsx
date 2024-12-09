@@ -2,6 +2,7 @@ const StartPage = () => {
 
     return(
         <>
+        <h2>StartPage</h2>
         </>
     )
 }
