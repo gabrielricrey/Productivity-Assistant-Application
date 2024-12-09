@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Routes, Route, Link} from 'react-router-dom'
+import { Routes, Route, Link, useNavigate} from 'react-router-dom'
 import './App.css'
 import LoginPage from './pages/LoginPage'
 import StartPage from './pages/StartPage'
@@ -8,6 +8,13 @@ import TodosPage from './pages/TodosPage'
 import EventCalendarPage from './pages/EventCalendarPage'
 
 function App() {
+
+  let navigate = useNavigate();
+
+  function signOut() {
+    sessionStorage.clear();
+    navigate('/')
+  }
 
   return (
     <>
@@ -18,6 +25,7 @@ function App() {
         <li><Link to='/todos'>Todos</Link></li>
         <li><Link to='/events'>Events</Link></li>
       </ul>
+      <button className='signout' onClick={() => signOut()}>Sign Out</button>
     </nav>
       <Routes>
         <Route path='/' element={<LoginPage/>}/>
