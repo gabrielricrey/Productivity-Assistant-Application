@@ -3,15 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 const EventCalendarPage = () => {
 
-    let [user, setUser] = useState(null);
+    let [user, setUser] = useState(null); // Ta bort troligtvis
     let [events,setEvents] = useState(JSON.parse(localStorage.getItem("events")) || []);
     let activeUser = JSON.parse(sessionStorage.getItem("user")).username;
-    console.log(activeUser);
 
-    let userEvents = events.map((event,i) => ({event,i})).filter(event => event.event.userid === activeUser);
-    console.log(userEvents);
-    
-    
+        
     let [eventTitle,setEventTitle] = useState("");
     let [eventStart, setEventStart] = useState("");
     let [eventEnd, setEventEnd] = useState("");
@@ -28,7 +24,7 @@ const EventCalendarPage = () => {
 
     useEffect(() => {
         localStorage.setItem("events", JSON.stringify(events));
-        
+        console.log('CHANGED!')
     }, [events])
 
     function createEvent(event) {
@@ -40,6 +36,13 @@ const EventCalendarPage = () => {
         }
     }
 
+    function deleteEvent(i) {
+        let newArray = [...events]
+
+        newArray.splice(i,1);
+
+        setEvents(newArray);
+    }
     
 
     return (
@@ -57,7 +60,7 @@ const EventCalendarPage = () => {
             <div>
                 <h3>Events</h3>
                 <ul>
-                    {events && userEvents.map(x => <li>{x.event.eventTitle} <button> X </button></li>) }
+                    {events && events.map((event,i) => ({event,i})).filter(event => event.event.userid === activeUser).map(event =>  <li>{event.event.eventTitle} <button onClick={() => deleteEvent(event.event.i)}> X </button></li> )}
                 </ul>
             </div>
         </div>
