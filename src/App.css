@@ -60,3 +60,16 @@ nav ul {
 .hide {
   display: none;
 }
+
+.signout {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 1rem;
+  margin-top: 1rem;
+}
+
+ul {
+  list-style: none;
+}
+
