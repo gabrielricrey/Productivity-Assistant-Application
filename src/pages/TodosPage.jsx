@@ -27,21 +27,7 @@ function TodosPage() {
 
     return(
         <>
-<Router>
-      <div>
-        <h1>Todo Lista</h1>
-        <Link to="/create">Skapa ett nytt ärende</Link>
-        <ul>
-          {todos.map((todo) => (
-            <li key={todo.id}>
-              <Link to={"/todo/${todo.id}"}>{todo.title}</Link>
-            </li>
-          ))}
-        </ul>
-        <Route path="/create" render={() => <CreateTodoForm addTodo={addTodo} />} />
-        <Route path="/todo/:id" render={() => <TodoDetails todos={todos} setTodos={setTodos} />} />
-      </div>
-    </Router>
+        <h2>Todos</h2>
         </>
     )
 }
