@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 const EventCalendarPage = () => {
 
@@ -11,6 +12,10 @@ const EventCalendarPage = () => {
     let [eventTitle,setEventTitle] = useState("");
     let [eventStart, setEventStart] = useState("");
     let [eventEnd, setEventEnd] = useState("");
+
+    let [editMode, setEditMode] = useState(false);
+    let [editingEventId,setEditingEventId] = useState("");
+    let [currentDateTime, setCurrentDateTime] = useState(new Date());
 
     let navigate = useNavigate();
 
@@ -29,19 +34,56 @@ const EventCalendarPage = () => {
 
     function createEvent(event) {
 
+        let eventId = uuidv4();
+        event.id = eventId;
+        console.log(event);
+
         if(localStorage.getItem("events")) {
             setEvents([...JSON.parse(localStorage.getItem("events")),event]);
         } else {
             setEvents(event);
         }
+
+        clearInputs()
+
+        
     }
 
-    function deleteEvent(i) {
-        let newArray = [...events]
+    function clearInputs() {
+        setEventTitle("");
+        setEventStart("");
+        setEventEnd("");
+    }
 
-        newArray.splice(i,1);
+    function deleteEvent(id) {
+
+        let filteredArray = events.filter(event => event.id !== id);
+
+        setEvents(filteredArray);
+    }
+
+    function editEvent(id) {
+        setEditMode(!editMode);
+        setEditingEventId(id);
+
+        let event = events.find(event => event.id === id);
+        setEventTitle(event.eventTitle);
+        setEventStart(event.eventStart);
+        setEventEnd(event.eventEnd);
+    }
+
+    function saveChanges() {
+        setEditMode(!editMode);
+        let newArray = [...events];
+        let index = newArray.findIndex(event => event.id === editingEventId);
+
+
+        newArray[index].eventTitle = eventTitle;
+        newArray[index].eventStart = eventStart;
+        newArray[index].eventEnd = eventEnd;
 
         setEvents(newArray);
+        clearInputs();
     }
     
 
@@ -49,18 +91,18 @@ const EventCalendarPage = () => {
         <div>
             <div>
                 <h3>Create Event</h3>
-                <input type="text" placeholder="Event"onChange={(e) => setEventTitle(e.target.value)}/>
+                <input type="text" placeholder="Event" value={eventTitle} onChange={(e) => setEventTitle(e.target.value)}/>
                 <br />
-                <input type="datetime-local" onChange={(e) => setEventStart(e.target.value)}/>
+                <input type="datetime-local" value={eventStart} onChange={(e) => setEventStart(e.target.value)}/>
                 <br />
-                <input type="datetime-local" min={eventStart} onChange={(e) => setEventEnd(e.target.value)}/>
+                <input type="datetime-local" value={eventEnd} min={eventStart} onChange={(e) => setEventEnd(e.target.value)}/>
                 <br />
-                <button onClick={() => createEvent({eventTitle,eventStart,eventEnd,userid: user.username})}>Create event</button>
+                <button onClick={() => {editMode? saveChanges() : createEvent({eventTitle,eventStart,eventEnd,userid: user.username})}}>{editMode ? "Save Changes" : "Create Event"}</button>
             </div>
             <div>
                 <h3>Events</h3>
-                <ul>
-                    {events && events.map((event,i) => ({event,i})).filter(event => event.event.userid === activeUser).map(event =>  <li>{event.event.eventTitle} <button onClick={() => deleteEvent(event.event.i)}> X </button></li> )}
+                <ul className="eventCardContainer">
+                    {events && events.filter(event => event.userid === activeUser).map(event => <li className="eventCard"><h3>{event.eventTitle}</h3><p>Start: {event.eventStart}</p><p>Slut: {event.eventEnd}</p> <button onClick={() => editEvent(event.id)}>Edit</button><button onClick={() => deleteEvent(event.id)}> X </button></li> )}
                 </ul>
             </div>
         </div>
