@@ -73,3 +73,25 @@ ul {
   list-style: none;
 }
 
+.addHabit {
+  margin-top: 40px;
+  border: 2px solid;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height:260px;
+  width:250px;
+}
+
+.habitItem {
+  margin-top: 20px;
+  margin-right: 20px;
+  border: 2px solid;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 150px;
+  width: 200px;
+}
