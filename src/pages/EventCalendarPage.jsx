@@ -5,7 +5,13 @@ const EventCalendarPage = () => {
 
     let [user, setUser] = useState(null);
     let [events,setEvents] = useState(JSON.parse(localStorage.getItem("events")) || []);
+    let activeUser = JSON.parse(sessionStorage.getItem("user")).username;
+    console.log(activeUser);
 
+    let userEvents = events.map((event,i) => ({event,i})).filter(event => event.event.userid === activeUser);
+    console.log(userEvents);
+    
+    
     let [eventTitle,setEventTitle] = useState("");
     let [eventStart, setEventStart] = useState("");
     let [eventEnd, setEventEnd] = useState("");
@@ -22,6 +28,7 @@ const EventCalendarPage = () => {
 
     useEffect(() => {
         localStorage.setItem("events", JSON.stringify(events));
+        
     }, [events])
 
     function createEvent(event) {
@@ -50,7 +57,7 @@ const EventCalendarPage = () => {
             <div>
                 <h3>Events</h3>
                 <ul>
-                    {user && events.filter(event => event.userid === user.username).map(event => <li>{event.eventTitle} + {event.eventStart} + {event.userid}</li>)}
+                    {events && userEvents.map(x => <li>{x.event.eventTitle} <button> X </button></li>) }
                 </ul>
             </div>
         </div>
