@@ -47,9 +47,9 @@ const LoginPage = () => {
     return (
         <div>
             <h3>Login</h3>
-            <input type="text" placeholder="Username" required onChange={(e) => setLoginUsername(e.target.value)}/>
+            <input type="text" placeholder="Username" onChange={(e) => setLoginUsername(e.target.value)} required/>
             <br />
-            <input type="password" placeholder="Password" required onChange={(e) => setLoginPassword(e.target.value)}/>
+            <input type="password" placeholder="Password" onChange={(e) => setLoginPassword(e.target.value)} required/>
             <br />
             <button onClick={login}>Sign in</button>
             <br />
