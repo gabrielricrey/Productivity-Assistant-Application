@@ -17,7 +17,9 @@ const StartPage = () => {
     return(
         <>
         <h2>StartPage</h2>
-        <p>Hello {user?.username}</p>
+        <div className="william"></div>
+        <div className="kalle"></div>
+        <div className="gabriel"></div>
         </>
     )
 }
