@@ -33,6 +33,7 @@ function App() {
         <Route path='/habits' element={<HabitsPage/>}/>
         <Route path='/todos' element={<TodosPage/>}/>
         <Route path='/events' element={<EventCalendarPage/>}/>
+        <Route path="/todos/:todoId" element={<TodosPage />} />
       </Routes>
     </>
   )
