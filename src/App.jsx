@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Routes, Route, Link, useNavigate} from 'react-router-dom'
 import './App.css'
-import LoginPage from './pages/LoginPage'
+import LoginPage from './pages/Login/LoginPage.jsx'
 import StartPage from './pages/StartPage'
 import HabitsPage from './pages/HabitsPage'
 import TodosPage from './pages/TodosPage'
-import EventCalendarPage from './pages/EventCalendarPage'
+import EventCalendarPage from './pages/EventCalendar/EventCalendarPage.jsx'
 
 function App() {
 
