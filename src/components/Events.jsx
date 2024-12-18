@@ -3,11 +3,11 @@ import Event from './Event.jsx'
 import Filter from "./Filter.jsx";
 import CreateAndEditEvent from "./CreateAndEditEvent.jsx";
 
-let Events = ({username}) => {
+let Events = ({ username }) => {
 
     let activeUser = username;
 
-    let [events, setEvents] = useState(JSON.parse(localStorage.getItem("events")).filter(event => event.userid === activeUser) || []);
+    let [events, setEvents] = useState(localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events")).filter(event => event.userid === activeUser) : []);
     let [filter, setFilter] = useState("");
     let [currentDateTime, setCurrentDateTime] = useState(new Date());
     let [editingEventId, setEditingEventId] = useState("");
@@ -19,7 +19,7 @@ let Events = ({username}) => {
         }, 60000);
 
         return () => clearInterval(interval);
-    }, [] )
+    }, [])
 
     useEffect(() => {
         localStorage.setItem("events", JSON.stringify(events));
@@ -31,7 +31,7 @@ let Events = ({username}) => {
         if (localStorage.getItem("events")) {
 
             let currentEvents = JSON.parse(localStorage.getItem("events"));
-            let updatedEvents = [...currentEvents,event];
+            let updatedEvents = [...currentEvents, event];
             setEvents(updatedEvents);
 
         } else {
@@ -47,11 +47,14 @@ let Events = ({username}) => {
     }
 
 
-    return(
-        <div>
+    return (
+        <div className="events-container">
+                <CreateAndEditEvent editingEventId={editingEventId} editCounter={editCounter} updateEvents={updateEvents} setEvents={setEvents} />
+            <div className="events">
+                <div className="header">
                 <h3>Events</h3>
-                <CreateAndEditEvent editingEventId={editingEventId} editCounter={editCounter} updateEvents={updateEvents} setEvents={setEvents} />
-                <Filter filter={filter} setFilter={setFilter}/>
+                <Filter filter={filter} setFilter={setFilter} />
+                </div>
                 <ul className="eventCardContainer">
                     {events && events
                         .sort((a, b) => {
@@ -96,12 +99,13 @@ let Events = ({username}) => {
                             }
 
                             return (
-                                <Event event={event} deleteEvent={deleteEvent} setEditingEventId={setEditingEventId} setEditCounter={setEditCounter} key={i}/>
+                                <Event event={event} deleteEvent={deleteEvent} setEditingEventId={setEditingEventId} setEditCounter={setEditCounter} key={i} />
                             )
 
                         })}
                 </ul>
             </div>
+        </div>
     )
 }
 

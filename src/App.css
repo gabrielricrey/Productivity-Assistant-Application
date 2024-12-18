@@ -15,7 +15,9 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  box-shadow: 0 0 3px white;
+  border-bottom: 1px solid #fff;
+  z-index: 5;
+  background: #000;
 }
 
 nav ul {
@@ -31,6 +33,7 @@ nav ul a {
   text-decoration: none;
   color: rgb(192, 192, 192);
   letter-spacing: 1px;
+  transition: all 0.3s ease;
   
 }
 
@@ -82,28 +85,5 @@ ul {
   width: 200px;
 }
 
-.eventCardContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
 
-.eventCard {
-  padding: .5rem;
-  border: 1px solid white;
-  width: 250px;
-  cursor: pointer;
-}
 
-.event-finished {
-  background: grey;
-}
-
-.event-ongoing {
-  background: green;
-}
-
-.green {
-  border: 2px solid green;
-  background: green;
-}

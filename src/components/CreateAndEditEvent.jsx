@@ -72,14 +72,11 @@ let CreateAndEditEvent = ({ editingEventId, editCounter , saveChanges, updateEve
 
     }
     return (
-        <div className={editMode ? "green" : ""}>
+        <div className={editMode ? "green create-event" : "create-event"}>
             <h3>Create Event</h3>
             <input type="text" placeholder="Event" value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} />
-            <br />
             <input type="datetime-local" value={eventStart} onChange={(e) => setEventStart(e.target.value)} />
-            <br />
             <input type="datetime-local" value={eventEnd} min={eventStart} onChange={(e) => setEventEnd(e.target.value)} />
-            <br />
             <button onClick={() => { editMode ? saveChanges() : createEvent({ eventTitle, eventStart, eventEnd }) }}>{editMode ? "Save Changes" : "Create Event"}</button>
         </div>
 

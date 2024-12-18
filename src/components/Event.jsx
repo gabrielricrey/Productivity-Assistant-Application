@@ -8,16 +8,20 @@ let Event = ({ event, setEditingEventId, setEditCounter, deleteEvent }) => {
     return (
 
         <li className={`${event.className} eventCard`}>
-            <h3>{event.eventTitle}</h3>
+            <div className="cardHeader">
+                <h3>{event.eventTitle}</h3>
+                {setEditCounter &&
+                    <div className="eventcard-buttons">
+                        <div className="buttons">
+                            <button className="edit" onClick={() => initializeEditEvent()}>Edit</button>
+                            <button className="close" onClick={() => deleteEvent(event.id)}> X </button>
+                        </div>
+                    </div >
+
+                }
+            </div>
             <p>Start: {event.eventStart}</p>
             <p>Slut: {event.eventEnd}</p>
-            {setEditCounter &&
-                <>
-                    <button onClick={() => initializeEditEvent()}>Edit</button>
-                    <button onClick={() => deleteEvent(event.id)}> X </button>
-                </>
-
-            }
         </li>
 
     )

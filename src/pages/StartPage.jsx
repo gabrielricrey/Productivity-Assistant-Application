@@ -4,27 +4,21 @@ import Event from "../components/Event";
 
 const StartPage = () => {
 
-    let [user,setUser] = useState(null);
-    let upcomingEvents = JSON.parse(localStorage.getItem("events"))
-        .filter(event => {
-            if(user) {
-                return event.userid === user.username && event.className == 'event-upcoming'
-            }
-        })
-        .slice(0,3)
-
     let navigate = useNavigate();
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    let [upcomingEvents,setUpcomingEvents] = useState(localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events"))
+    .filter(event => event.userid === user.username && event.className == 'event-upcoming')
+    .slice(0,3) : [])
+
 
     useEffect(() => {
-        if(sessionStorage.getItem("user")) {
-            setUser(JSON.parse(sessionStorage.getItem("user")));
-        } else {
+        if(!sessionStorage.getItem("user")) {
             navigate('/')
-        }
+        } 
     }, [])
 
     return (
-        <>
+        <div>
             <h2>StartPage</h2>
             <div className="william"></div>
             <div className="kalle"></div>
@@ -36,7 +30,7 @@ const StartPage = () => {
                             <Event event={event} key={i} />)}
                 </ul>
             </div>
-        </>
+        </div>
     )
 }
 

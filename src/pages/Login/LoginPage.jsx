@@ -36,8 +36,6 @@ const LoginPage = () => {
 
     }
 
-
-
     const register = (newUser) => {
         console.log(newUser);
         if (localStorage.getItem("users")) {
@@ -62,7 +60,7 @@ const LoginPage = () => {
                 <input type="password" placeholder="Password" onChange={(e) => setLoginPassword(e.target.value)} required />
                 <button onClick={login}>Sign in</button>
             </div>
-            <div className="register hide">
+            <div className="register">
                 <h2>Register here</h2>
                 <input type="text" placeholder="Firstname" onChange={(e) => setFirstname(e.target.value)} required />
                 <input type="text" placeholder="Lastname" onChange={(e) => setLastname(e.target.value)} required />

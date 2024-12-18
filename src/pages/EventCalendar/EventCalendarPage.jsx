@@ -21,9 +21,9 @@ const EventCalendarPage = () => {
     
 
     return (
-        <div>
+        <>
             {user && <Events username={user.username}/>}
-        </div>
+        </>
     )
 }
 
