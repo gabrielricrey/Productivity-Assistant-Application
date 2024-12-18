@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AddHabit from "../../components/AddHabit";
+import "./Habits.css"
+
 
 const HabitsPage = () => {
 
@@ -29,6 +32,10 @@ const HabitsPage = () => {
         filterByPriority()
     }, [filteredPriority, habits])
 
+    useEffect(() => {
+        sortArray()
+    }, [sortList])
+
     const addHabit = () => {
         if(title === "" || repetition === "" || priority === "Default") {
             return alert("All inputs are required")
@@ -50,13 +57,12 @@ const HabitsPage = () => {
     }
 
     const removeHabit = (i) => {
-        let newArray = [...habits]
-        newArray.splice(i,1)
-        setHabits(newArray)
+        let newArray = [...habits];
+        newArray.splice(i,1);
+        setHabits(newArray);
     }
 
     const incrementRep = (i) => {
-
         let newArray = [...habits];
         newArray[i].repetition ++;
         setHabits(newArray);
@@ -67,7 +73,7 @@ const HabitsPage = () => {
     const decreaseRep = (i) => {
         let newArray = [...habits];
         newArray[i].repetition --;
-        setHabits(newArray)
+        setHabits(newArray);
         console.log(habits);
     }
 
@@ -79,7 +85,6 @@ const HabitsPage = () => {
     }
 
     const filterByPriority = () => {
-
         if(filteredPriority === "Default") {
             setFilteredHabits(habits)
         } else {
@@ -91,7 +96,27 @@ const HabitsPage = () => {
 
     }
 
-    const sortArray = () => {}
+    const sortArray = () => {
+        let sortedHabits = [...habits]
+
+        let valueMapping = {
+            High: 3,
+            Medium: 2,
+            Low: 1
+        }
+        if(sortList === "Unsorted") {
+          sortedHabits = JSON.parse(localStorage.getItem("habits")) || [];
+        } else if(sortList === "High") {
+            sortedHabits.sort((a, b) => valueMapping[b.priority] - valueMapping[a.priority])
+        } else if(sortList === "Low") {
+            sortedHabits.sort((a, b) => valueMapping[a.priority] - valueMapping[b.priority])
+        } else if(sortList === "Rep descend") {
+            sortedHabits.sort((a, b) => b.repetition - a.repetition)
+        } else {
+            sortedHabits.sort((a, b) => a.repetition - b.repetition)
+        }
+        setFilteredHabits(sortedHabits);
+    }
 
     return(<>
         <div className="addHabit">
@@ -119,19 +144,16 @@ const HabitsPage = () => {
                 <option value="High">High</option>
             </select>
             <p>Sort list:</p>
-            <select value={sortList} onChange={sortArray}>
+            <select value={sortList} onChange={(e) => setSortList(e.target.value)}>
                 <option value="Default" disabled>Sort by</option>
-                <option value="Low ascend">Low priority</option>
-                <option value="Low descend">Low priority - descending</option>
-                <option value="Medium ascend">Medium priority</option>
-                <option value="Medium decscend">Medium priority - descending</option>
-                <option value="High ascend">High priority</option>
-                <option value="High descend">High priority - descending</option>
-                <option value="Rep ascend">Repetition</option>
+                <option value="Unsorted">Unsorted</option>
+                <option value="Low">Low priority</option>
+                <option value="High">High priority</option>
                 <option value="Rep descend">Repetition - descending</option>
+                <option value="Rep ascend">Repetition</option>
             </select>
             <ul>
-                {filteredHabits.map((habit, i) => <li key={i} className="habitItem">
+                {filteredHabits.filter(habit => habit.userid === JSON.parse(sessionStorage.getItem("user")).username).map((habit, i) => <li key={i} className="habitItem">
                     <p><strong>Title: </strong>{habit.title}</p>
                     <p><strong>Repetitions: </strong>{habit.repetition}</p>
                     <p><strong>Priority: </strong>{habit.priority}</p>

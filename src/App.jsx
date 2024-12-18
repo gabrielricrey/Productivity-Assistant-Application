@@ -3,7 +3,7 @@ import { Routes, Route, Link, useNavigate} from 'react-router-dom'
 import './App.css'
 import LoginPage from './pages/LoginPage'
 import StartPage from './pages/StartPage'
-import HabitsPage from './pages/HabitsPage'
+import HabitsPage from './pages/habits/HabitsPage'
 import TodosPage from './pages/TodosPage'
 import EventCalendarPage from './pages/EventCalendarPage'
 
@@ -18,7 +18,7 @@ function App() {
 
   return (
     <>
-    <nav>
+    {sessionStorage.getItem("user") && <nav>
       <ul>
         <li><Link to='/start'>Start</Link></li>
         <li><Link to='/habits'>Habits</Link></li>
@@ -26,7 +26,7 @@ function App() {
         <li><Link to='/events'>Events</Link></li>
       </ul>
       <button className='signout' onClick={() => signOut()}>Sign Out</button>
-    </nav>
+    </nav>}
       <Routes>
         <Route path='/' element={<LoginPage/>}/>
         <Route path='/start' element={<StartPage/>}/>
