@@ -7,7 +7,7 @@ let Events = ({ username }) => {
 
     let activeUser = username;
 
-    let [events, setEvents] = useState(localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events")).filter(event => event.userid === activeUser) : []);
+    let [events, setEvents] = useState(JSON.parse(localStorage.getItem("events")) || []);
     let [filter, setFilter] = useState("");
     let [currentDateTime, setCurrentDateTime] = useState(new Date());
     let [editingEventId, setEditingEventId] = useState("");
@@ -70,6 +70,7 @@ let Events = ({ username }) => {
 
                             return dateAEnd - dateBEnd;
                         })
+                        .filter(event => event.userid === activeUser)
                         .filter(event => {
                             let eventStart = new Date(event.eventStart);
                             let eventEnd = new Date(event.eventEnd);
