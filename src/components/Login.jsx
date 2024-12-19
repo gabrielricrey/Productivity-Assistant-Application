@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-let Login = () => {
+let Login = ({ toggleVisibility ,SetToggleVisibility}) => {
 
     let [loginUsername, setLoginUsername] = useState("");
     let [loginPassword, setLoginPassword] = useState("");
@@ -33,6 +33,7 @@ let Login = () => {
             <h2>Login</h2>
             <input type="text" placeholder="Username" onChange={(e) => setLoginUsername(e.target.value)} required />
             <input type="password" placeholder="Password" onChange={(e) => setLoginPassword(e.target.value)} required />
+            <p onClick={() => SetToggleVisibility(!toggleVisibility)}>Create Account</p>
             <button onClick={login}>Sign in</button>
         </div>
     )

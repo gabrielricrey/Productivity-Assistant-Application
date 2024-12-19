@@ -10,7 +10,7 @@ const StartPage = () => {
     let navigate = useNavigate();
     let user = JSON.parse(sessionStorage.getItem("user"));
     let upcomingEvents = localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events"))
-        .filter(event => event.userid === user.username && event.className == 'event-upcoming')
+        .filter(event => event.userid === user?.username && event.className == 'event-upcoming' || event.className == 'event-ongoing')
         .slice(0, 3) : []
   
     useEffect(() => {
@@ -38,7 +38,7 @@ const StartPage = () => {
             <div className="william"></div>
             <div className="kalle"></div>
             <div className="gabriel">
-                <h3>Upcoming Events: </h3>
+                <h3>Your upcoming events </h3><button>To all events</button>
                 <ul>
                     {upcomingEvents && upcomingEvents
                         .map((event, i) =>

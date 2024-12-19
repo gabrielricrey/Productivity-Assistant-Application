@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-let RegisterUser = () => {
+let RegisterUser = ({toggleVisibility, SetToggleVisibility}) => {
 
     let [firstname, setFirstname] = useState("");
     let [lastname, setLastname] = useState("");
@@ -19,6 +19,8 @@ let RegisterUser = () => {
             let users = [newUser];
             localStorage.setItem("users", JSON.stringify(users));
         }
+
+        SetToggleVisibility(!toggleVisibility);
     }
 
     return (

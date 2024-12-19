@@ -121,6 +121,7 @@ height: 20px;
 .event-finished {
     box-shadow: 1px 1px 5px red;
     border: 1px solid red;
+    opacity: 0.5;
   }
   
 .event-ongoing {
@@ -129,6 +130,5 @@ height: 20px;
 }
   
 .green {
-    border: 2px solid green;
     background: green;
 }
