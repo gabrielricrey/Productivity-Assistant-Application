@@ -12,11 +12,7 @@ const StartPage = () => {
     let upcomingEvents = localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events"))
         .filter(event => event.userid === user.username && event.className == 'event-upcoming')
         .slice(0, 3) : []
-    // let [upcomingEvents,setUpcomingEvents] = useState(localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events"))
-    // .filter(event => event.userid === user.username && event.className == 'event-upcoming')
-    // .slice(0,3) : [])
-
-
+  
     useEffect(() => {
         if (!sessionStorage.getItem("user")) {
             navigate('/')
