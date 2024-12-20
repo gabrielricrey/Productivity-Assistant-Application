@@ -13,6 +13,7 @@ const StartPage = () => {
 
     const { events, currentDateTime } = useContext(EventsContext);
 
+
     useEffect(() => {
         if (!sessionStorage.getItem("user")) {
             navigate('/')
@@ -27,16 +28,28 @@ const StartPage = () => {
         setQuote(data[0].content)
     }
 
-    return (
+    
+    return(
         <div className="startpage-container">
             <div className="welcome">
                 {activeUser && <h2>{`Hello ${activeUser.username}!`}</h2>}
                 {quote && <p>{quote}</p>}
             </div>
-            <div className="william"></div>
-            <div className="kalle"></div>
-            <div className="gabriel">
-                <h3>Your upcoming events </h3><button onClick={() => navigate('/events')}>To all events</button>
+        <div className="william"></div>
+        <div className="kalle">
+            <h3>Test</h3>
+            <ul>
+                {JSON.parse(localStorage.getItem("todos"))
+                .filter(todo => todo.userid === JSON.parse(sessionStorage.getItem("user")).username)
+                .reverse()
+                .slice(0,3)
+                .map(todo => <li>{todo.title}</li>)
+                
+                }
+            </ul>
+        </div>
+        <div className="gabriel">
+        <h3>Upcoming Events: </h3><button onClick={() => navigate('/events')}>To all events</button>
                 <ul>
                     {events && events
                     .map(event => {

@@ -1,135 +1,230 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 let TodosPage = () => {
-    let [user, setUser] = useState(null)
-    let [todos, setTodos] = useState([])
-    let [title, setTitle] = useState("")
-    let [description, setDescription] = useState("")
-    let [isDone, setIsDone] = useState(false);
-    let [timeEstimate, setTimeEstimate] = useState("")
-    let [category, setCategory] = useState("Hälsa")
-    let [deadline, setDeadline] = useState("")
-    let navigate = useNavigate()
-    let categories = ["Hälsa", "Hushåll", "Jobbrelaterat", "Nöje"]
+    let [user, setUser] = useState(null);
+    let [todos, setTodos] = useState([]);
+    let [filteredTodos, setFilteredTodos] = useState([]);
+    let [currentTodo, setCurrentTodo] = useState({
+        title: "",
+        description: "",
+        isDone: false,
+        timeEstimate: "",
+        category: "Hälsa",
+        deadline: ""
+    })
 
-    // För att fånga id från URL när man redigerar ett specifikt ärende
-    let { todoId } = useParams()
+    let [filter, setFilter] = useState({
+        isDone: null,
+        categories: [],
+        sortBy: "deadline",
+        sortOrder: "asc"
+    })
+
+    let { todoId } = useParams();
+    let navigate = useNavigate();
+    let categories = ["Hälsa", "Hushåll", "Jobbrelaterat", "Nöje"];
 
     useEffect(() => {
-        let savedUser = sessionStorage.getItem("user")
-        if (savedUser) {
-            setUser(JSON.parse(savedUser))
+        let storedUser = sessionStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
         } else {
-            navigate("/")
+            navigate("/");
         }
 
-        // Om vi är på en specifik todo-sida (för att redigera)
+        const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+        setTodos(savedTodos);
+    }, [navigate]);
+
+    useEffect(() => {
         if (todoId) {
-            const todoToEdit = todos.find(todo => todo.id === parseInt(todoId))
-            if (todoToEdit) {
-                setTitle(todoToEdit.title)
-                setDescription(todoToEdit.description)
-                setIsDone(todoToEdit.isDone)
-                setTimeEstimate(todoToEdit.timeEstimate)
-                setCategory(todoToEdit.category)
-                setDeadline(todoToEdit.deadline)
+            const editingTodo = todos.find(todo => todo.id === parseInt(todoId));
+            if (editingTodo) {
+                setCurrentTodo({ ...editingTodo });
             }
         }
-    }, [navigate, todoId, todos])
+    }, [todoId, todos]);
 
-    let handleSubmit = (e) => {
-        e.preventDefault()
-        if (!title.trim()) return
+    useEffect(() => {
+        applyFilters();
+    }, [filter, todos]);
 
-        let newTodo = {
-            id: todoId ? parseInt(todoId) : Date.now(),
-            title,
-            description,
-            isDone,
-            timeEstimate,
-            category,
-            deadline,
-        };
+    let applyFilters = () => {
+        let filtered = [...todos];
 
-        if (todoId) {
-            // Uppdatera todo om vi är på redigeringssidan
-            setTodos(todos.map(todo => (todo.id === newTodo.id ? newTodo : todo)))
-        } else {
-            // Lägg till nytt todo om vi är på huvudlistan
-            setTodos([...todos, newTodo])
+        if (filter.isDone !== null) {
+            filtered = filtered.filter(todo => todo.isDone === filter.isDone);
         }
 
-        setTitle("")
-        setDescription("")
-        setIsDone(false)
-        setTimeEstimate("")
-        setCategory("Hälsa")
-        setDeadline("")
-        navigate("/todos")
+        if (filter.categories.length > 0) {
+            filtered = filtered.filter(todo => filter.categories.includes(todo.category));
+        }
+
+        if (filter.sortBy === "deadline") {
+            filtered.sort((a, b) => {
+                let dateA = new Date(a.deadline);
+                let dateB = new Date(b.deadline);
+                return filter.sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+            })
+        } else if (filter.sortBy === "timeEstimate") {
+            filtered.sort((a, b) => filter.sortOrder === "asc" ? a.timeEstimate - b.timeEstimate : b.timeEstimate - a.timeEstimate);
+        } else if (filter.sortBy === "isDone") {
+            filtered.sort((a, b) => filter.sortOrder === "asc" ? a.isDone - b.isDone : b.isDone - a.isDone);
+        }
+
+        setFilteredTodos(filtered);
     }
 
-    const handleDelete = (id) => {
-        setTodos(todos.filter(todo => todo.id !== id))
-        navigate("/todos")
+    let onSubmit = (e) => {
+        e.preventDefault();
+        if (!currentTodo.title.trim()) return;
+
+        let todoToSave = {
+            id: todoId ? parseInt(todoId) : Date.now(),
+            ...currentTodo
+        }
+
+        if (todoId) {
+            setTodos(todos.map(todo => (todo.id === todoToSave.id ? todoToSave : todo)));
+        } else {
+            setTodos([...todos, todoToSave]);
+        }
+
+        localStorage.setItem("todos", JSON.stringify(todoId ? todos.map(todo => (todo.id === todoToSave.id ? todoToSave : todo)) : [...todos, todoToSave]));
+
+        setCurrentTodo({ title: "", description: "", isDone: false, timeEstimate: "", category: "Hälsa", deadline: "" });
+        navigate("/todos");
     }
 
-    const toggleCompletion = (id) => {
-        setTodos(todos.map(todo => 
-            todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
-        ))
+    let deleteTodo = (id) => {
+        let updatedTodos = todos.filter(todo => todo.id !== id);
+        setTodos(updatedTodos);
+        localStorage.setItem("todos", JSON.stringify(updatedTodos));
+        navigate("/todos");
+    }
+
+    let toggleCompletion = (id) => {
+        let updatedTodos = todos.map(todo => todo.id === id ? { ...todo, isDone: !todo.isDone } : todo);
+        setTodos(updatedTodos);
+        localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    }
+
+    let handleFilterChange = (filterType, value) => {
+        setFilter(prevFilter => ({
+            ...prevFilter,
+            [filterType]: value
+        }))
+    }
+
+    let handleCategoryChange = (category) => {
+        setFilter(prevFilter => {
+            let categories = prevFilter.categories.includes(category)
+                ? prevFilter.categories.filter(c => c !== category)
+                : [...prevFilter.categories, category];
+            return { ...prevFilter, categories };
+        });
+    };
+
+    let handleSortChange = (sortBy) => {
+        let newSortOrder = filter.sortBy === sortBy && filter.sortOrder === "asc" ? "desc" : "asc";
+        setFilter(prevFilter => ({
+            ...prevFilter,
+            sortBy,
+            sortOrder: newSortOrder
+        }))
     }
 
     if (!user) return null;
 
     return (
-        <div style={{ maxWidth: "600px", margin: "20px auto", fontFamily: "Arial" }}>
+        <div style={{ maxWidth: "600px", margin: "20px auto", fontFamily: "Arial", textAlign: "center" }}>
             <h2>{todoId ? "Redigera ärende" : "Lägg till nytt ärende"}</h2>
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+
+            <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <input
+                    type="text"
                     placeholder="Titel"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={currentTodo.title}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, title: e.target.value, userid: JSON.parse(sessionStorage.getItem("user")).username })}
                 />
                 <textarea
                     placeholder="Beskrivning"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={currentTodo.description}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, description: e.target.value })}
                 />
                 <select
-                    value={isDone}
-                    onChange={(e) => setIsDone(e.target.value === "true")}
+                    value={currentTodo.isDone ? "true" : "false"}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, isDone: e.target.value === "true" })}
                 >
                     <option value="false">Ej utförd</option>
                     <option value="true">Utförd</option>
                 </select>
                 <input
+                    type="text"
                     placeholder="Tidsestimat"
-                    value={timeEstimate}
-                    onChange={(e) => setTimeEstimate(e.target.value)}
+                    value={currentTodo.timeEstimate}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, timeEstimate: e.target.value })}
                 />
                 <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    value={currentTodo.category}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, category: e.target.value })}
                 >
-                    {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                            {cat}
-                        </option>
+                    {categories.map(category => (
+                        <option key={category} value={category}>{category}</option>
                     ))}
                 </select>
                 <input
                     type="date"
-                    value={deadline}
-                    onChange={(e) => setDeadline(e.target.value)}
+                    value={currentTodo.deadline}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, deadline: e.target.value })}
                 />
-                <button type="submit">{todoId ? "Uppdatera ärende" : "Lägg till ärende"}</button>
+                <button type="submit">
+                    {todoId ? "Uppdatera ärende" : "Lägg till ärende"}
+                </button>
             </form>
 
+            <div>
+                <h3>Filtrera</h3>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={filter.isDone === true}
+                        onChange={() => handleFilterChange("isDone", filter.isDone === true ? null : true)}
+                    />
+                    Utförd
+                </label>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={filter.isDone === false}
+                        onChange={() => handleFilterChange("isDone", filter.isDone === false ? null : false)}
+                    />
+                    Ej utförd
+                </label>
+
+                <h4>Kategorier</h4>
+                {categories.map(category => (
+                    <label key={category}>
+                        <input
+                            type="checkbox"
+                            checked={filter.categories.includes(category)}
+                            onChange={() => handleCategoryChange(category)}
+                        />
+                        {category}
+                    </label>
+                ))}
+
+                <h4>Sortera</h4>
+                <button className="deadline-btn" onClick={() => handleSortChange("deadline")}>Sortera efter Deadline</button>
+                <button onClick={() => handleSortChange("timeEstimate")}>Sortera efter Tidsestimat</button>
+                <button onClick={() => handleSortChange("isDone")}>Sortera efter Status</button>
+            </div>
+
             {!todoId && (
-                <ul>
-                    {todos.map((todo) => (
-                        <li key={todo.id}>
+                <ul className="todo-card-container">
+                    {filteredTodos.map(todo => (
+                        <li className="todo-card" key={todo.id}>
                             <h4>{todo.title}</h4>
                             <p>{todo.description}</p>
                             <p>{todo.isDone ? "Utförd" : "Ej utförd"}</p>
@@ -138,15 +233,15 @@ let TodosPage = () => {
                             <p>{todo.deadline}</p>
                             <button onClick={() => navigate(`/todos/${todo.id}`)}>Redigera</button>
                             <button onClick={() => toggleCompletion(todo.id)}>
-                                {todo.isDone ? "Markera som ej slutförd" : "Markera som slutförd"}
+                                {todo.isDone ? "Markera som Ej utförd" : "Markera som Utförd"}
                             </button>
-                            <button onClick={() => handleDelete(todo.id)}>Ta bort</button>
+                            <button onClick={() => deleteTodo(todo.id)}>Ta bort</button>
                         </li>
                     ))}
                 </ul>
             )}
         </div>
-    );
-};
+    )
+}
 
 export default TodosPage;
