@@ -13,6 +13,7 @@ const StartPage = () => {
     .slice(0,3) : [])
 
 
+
     useEffect(() => {
         if(!sessionStorage.getItem("user")) {
             navigate('/')
@@ -35,7 +36,18 @@ const StartPage = () => {
         {user && <p>{`Hello ${user.username}`}</p>}
         { quote && <p>{quote}</p>}
         <div className="william"></div>
-        <div className="kalle"></div>
+        <div className="kalle">
+            <h3>Test</h3>
+            <ul>
+                {JSON.parse(localStorage.getItem("todos"))
+                .filter(todo => todo.userid === JSON.parse(sessionStorage.getItem("user")).username)
+                .reverse()
+                .slice(0,3)
+                .map(todo => <li>{todo.title}</li>)
+                
+                }
+            </ul>
+        </div>
         <div className="gabriel">
         <h3>Upcoming Events: </h3>
                 <ul>

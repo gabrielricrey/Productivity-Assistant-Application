@@ -146,7 +146,7 @@ let TodosPage = () => {
                     type="text"
                     placeholder="Titel"
                     value={currentTodo.title}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, title: e.target.value })}
+                    onChange={(e) => setCurrentTodo({ ...currentTodo, title: e.target.value, userid: JSON.parse(sessionStorage.getItem("user")).username })}
                 />
                 <textarea
                     placeholder="Beskrivning"
