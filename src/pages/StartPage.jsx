@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Event from "../components/Event";
+import Habit from "../components/Habit";
 
 const StartPage = () => {
 
@@ -34,7 +35,15 @@ const StartPage = () => {
         <h2>StartPage</h2>
         {user && <p>{`Hello ${user.username}`}</p>}
         { quote && <p>{quote}</p>}
-        <div className="william"></div>
+        <div className="william">
+            <ul>
+            {JSON.parse(localStorage.getItem("habits")).filter(
+                habit => habit.userid === JSON.parse(sessionStorage.getItem("user")).username).sort(
+                    (a, b) => b.repetition - a.repetition).slice(
+                        0, 3).map(
+                        (habit, i) => <Habit habit={habit}index={i}/>)}
+            </ul>
+        </div>
         <div className="kalle"></div>
         <div className="gabriel">
         <h3>Upcoming Events: </h3>
