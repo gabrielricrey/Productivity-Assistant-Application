@@ -8,11 +8,11 @@ const HabitsPage = () => {
 
 
 
-    return(<>
+    return(<div className="habits">
 
         <Habits/>   
-        
-        </>)
+
+        </div>)
 }
 
 export default HabitsPage;

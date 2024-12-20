@@ -1,13 +1,37 @@
 .addHabit {
-    margin-top: 40px;
-    border: 2px solid;
+    margin-top: 52px;
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    align-items:center;
+    justify-content: start;
     flex-direction: column;
-    height:260px;
-    width:250px;
+    width:350px;
+    height: 100vh;
+    border-right: 1px solid white;
+    gap: 5px;
   }
+
+  .addHabit h3 {
+    margin: 1rem 0;
+}
+
+.addHabit input {
+    padding: .4rem;
+    border-radius: 5px;
+}
+
+  .addHabit button {
+    padding: .7rem .2rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: .2rem;
+    background: rgb(23, 174, 23);
+    color: white;
+  }
+
+  .addHabit button:hover {
+    background: rgb(32, 187, 32);
+}
   
   .habitItem {
     margin-top: 20px;
@@ -27,4 +51,13 @@
 
   option {
     color:black;
+  }
+
+  .habits {
+    display:flex;
+  }
+
+  .habitDisplay {
+    margin-top: 52px;
+    padding: 1rem;
   }

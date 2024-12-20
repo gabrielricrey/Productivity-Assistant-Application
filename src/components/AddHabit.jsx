@@ -1,6 +1,6 @@
 const AddHabit = ({addHabit, title, setTitle, repetition, setRepetition, priority, setPriority}) => {
     return(
-        <>
+        
         <div className="addHabit">
             <h3>Add a habit</h3>
             <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
@@ -15,7 +15,7 @@ const AddHabit = ({addHabit, title, setTitle, repetition, setRepetition, priorit
             </select>
             <button onClick={addHabit}>Add habit</button>
         </div>
-        </>
+        
     )
 }
 

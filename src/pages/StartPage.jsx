@@ -36,12 +36,13 @@ const StartPage = () => {
         {user && <p>{`Hello ${user.username}`}</p>}
         { quote && <p>{quote}</p>}
         <div className="william">
+            <h3>Most frequent habits:</h3>
             <ul>
-            {JSON.parse(localStorage.getItem("habits")).filter(
-                habit => habit.userid === JSON.parse(sessionStorage.getItem("user")).username).sort(
-                    (a, b) => b.repetition - a.repetition).slice(
-                        0, 3).map(
-                        (habit, i) => <Habit habit={habit}index={i}/>)}
+            {JSON.parse(localStorage.getItem("habits"))
+            .filter( habit => habit.userid === JSON.parse(sessionStorage.getItem("user")).username)
+            .sort((a, b) => b.repetition - a.repetition)
+            .slice( 0, 3)
+            .map((habit, i) => <Habit habit={habit}index={i}/>)}
             </ul>
         </div>
         <div className="kalle"></div>

@@ -123,10 +123,11 @@ const Habits = () => {
     }
     return(
         <>
+        
          <AddHabit addHabit={addHabit} title={title} setTitle={setTitle} repetition={repetition} setRepetition={setRepetition} priority={priority} setPriority={setPriority}/>
+        <div className="habitDisplay">
         <FilterHabit filteredPriority={filteredPriority} setFilteredPriority={setFilteredPriority}/>
         <SortHabit sortList={sortList} setSortList={setSortList}/>
-        <div className="habitDisplay">
             <ul>
                 {filteredHabits.filter(habit => habit.userid === JSON.parse(sessionStorage.getItem("user")).username).map((habit, i) => <Habit habit={habit} removeHabit={removeHabit} incrementRep={incrementRep} decreaseRep={decreaseRep} resetRep={resetRep} index={i} key={i}/>)}
             </ul>
