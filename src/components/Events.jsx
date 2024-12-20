@@ -1,31 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Event from './Event.jsx'
 import Filter from "./Filter.jsx";
 import CreateAndEditEvent from "./CreateAndEditEvent.jsx";
+import { EventsContext } from "../context/EventsContext.jsx";
 
 let Events = ({ username }) => {
 
     let activeUser = username;
 
-    let [events, setEvents] = useState(JSON.parse(localStorage.getItem("events")) || []);
+    const { events, setEvents, currentDateTime, setCurrentDateTime } = useContext(EventsContext);
+
     let [filter, setFilter] = useState("");
-    let [currentDateTime, setCurrentDateTime] = useState(new Date());
-    let [editingEventId, setEditingEventId] = useState("");
-    let [editCounter, setEditCounter] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentDateTime(new Date());
-        }, 60000);
-
-        return () => clearInterval(interval);
-    }, [])
 
     useEffect(() => {
         localStorage.setItem("events", JSON.stringify(events));
     }, [events])
 
-
+    
     function updateEvents(event) {
 
         if (localStorage.getItem("events")) {
@@ -49,7 +41,7 @@ let Events = ({ username }) => {
 
     return (
         <div className="events-container">
-                <CreateAndEditEvent editingEventId={editingEventId} editCounter={editCounter} updateEvents={updateEvents} setEvents={setEvents} />
+                <CreateAndEditEvent updateEvents={updateEvents} setEvents={setEvents} />
             <div className="events">
                 <div className="header">
                 <h3>Events</h3>
@@ -100,7 +92,7 @@ let Events = ({ username }) => {
                             }
 
                             return (
-                                <Event event={event} deleteEvent={deleteEvent} setEditingEventId={setEditingEventId} setEditCounter={setEditCounter} key={i} />
+                                <Event event={event} deleteEvent={deleteEvent} key={i} />
                             )
 
                         })}
