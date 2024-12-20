@@ -4,6 +4,8 @@
   margin: 0 auto;
   text-align: center;
   position: relative;
+  justify-content: center;
+  align-items: center;
   background: #151515;
 }
 

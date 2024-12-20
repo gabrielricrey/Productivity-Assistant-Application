@@ -1,0 +1,28 @@
+.startpage-container {
+    width: 100%;
+    height: 100vh;
+    margin-top: 100px;
+}
+
+.startpage-container .gabriel {
+    margin: 2rem 0;
+    padding: 0 2rem;
+}
+
+.startpage-container .gabriel > h3 {
+    text-align: start;
+    margin: 0 0 .5rem 1.5rem;
+    display: inline;
+}
+
+.gabriel > ul {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.welcome {
+    margin-top: 2rem;
+}

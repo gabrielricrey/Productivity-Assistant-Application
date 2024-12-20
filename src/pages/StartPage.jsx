@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Event from "../components/Event";
 import Habit from "../components/Habit";
+import { EventsContext } from "../context/EventsContext";
+import './StartPage.css';
+
 
 const StartPage = () => {
 
-
-    let[quote, setQuote] = useState(null);
+    let [quote, setQuote] = useState(null);
     let navigate = useNavigate();
-    let user = JSON.parse(sessionStorage.getItem("user"));
-    let [upcomingEvents,setUpcomingEvents] = useState(localStorage.getItem("events") ? JSON.parse(localStorage.getItem("events"))
-    .filter(event => event.userid === user.username && event.className == 'event-upcoming')
-    .slice(0,3) : [])
+    let activeUser = JSON.parse(sessionStorage.getItem("user"));
+
+    const { events, currentDateTime } = useContext(EventsContext);
 
 
     useEffect(() => {
-        if(!sessionStorage.getItem("user")) {
+        if (!sessionStorage.getItem("user")) {
             navigate('/')
-        } 
+        }
         showQuote()
     }, [])
 
@@ -25,17 +26,17 @@ const StartPage = () => {
         let response = await fetch("https://api.quotable.io/quotes/random")
         let data = await response.json();
         console.log(data[0].content);
-        setQuote(data[0].content)   
+        setQuote(data[0].content)
     }
 
-   
-
+    
     return(
-        <>
-        <h2>StartPage</h2>
-        {user && <p>{`Hello ${user.username}`}</p>}
-        { quote && <p>{quote}</p>}
-        <div className="william">
+        <div className="startpage-container">
+            <div className="welcome">
+                {activeUser && <h2>{`Hello ${activeUser.username}!`}</h2>}
+                {quote && <p>{quote}</p>}
+            </div>
+            <div className="william">
             <h3>Most frequent habits:</h3>
             <ul>
             {JSON.parse(localStorage.getItem("habits"))
@@ -45,17 +46,46 @@ const StartPage = () => {
             .map((habit, i) => <Habit habit={habit}index={i}/>)}
             </ul>
         </div>
-        <div className="kalle"></div>
-        <div className="gabriel">
-        <h3>Upcoming Events: </h3>
-                <ul>
-                    {upcomingEvents && upcomingEvents
-                        .map((event, i) =>
-                            <Event event={event} key={i} />)}
-                </ul>
+        <div className="kalle">
+            <h3>Test</h3>
+            <ul>
+                {JSON.parse(localStorage.getItem("todos"))
+                .filter(todo => todo.userid === JSON.parse(sessionStorage.getItem("user")).username)
+                .reverse()
+                .slice(0,3)
+                .map(todo => <li>{todo.title}</li>)
+                
+                }
+            </ul>
         </div>
-        </>
+        <div className="gabriel">
+        <h3>Upcoming Events: </h3><button onClick={() => navigate('/events')}>To all events</button>
+                <ul>
+                    {events && events
+                    .map(event => {
+
+                        let eventStart = new Date(event.eventStart);
+                        let eventEnd = new Date(event.eventEnd);
+
+                        if (eventEnd < currentDateTime) {
+                            event.className = 'event-finished';
+                        } else if (eventStart < currentDateTime && currentDateTime < eventEnd) {
+                            event.className = 'event-ongoing'
+                        } else {
+                            event.className = 'event-upcoming';
+                        }
+
+                        return event;
+                    })
+                    .filter(event => event.userid === activeUser?.username && event.className == 'event-upcoming' || event.className == 'event-ongoing')
+                    .slice(0, 3)
+                    .map((event, i) => <Event event={event} key={i} />)}
+                </ul>
+            </div>
+
+        </div>
     )
 }
 
 export default StartPage;
+

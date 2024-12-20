@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import {EditModeContext}  from "../context/EditModeContext";
 
-let CreateAndEditEvent = ({ editingEventId, editCounter , saveChanges, updateEvents, setEvents}) => {
+let CreateAndEditEvent = ({ saveChanges, updateEvents, setEvents}) => {
 
     let activeUser = JSON.parse(sessionStorage.getItem("user")).username;
 
     let [eventTitle, setEventTitle] = useState("");
     let [eventStart, setEventStart] = useState("");
     let [eventEnd, setEventEnd] = useState("");
-    let [editMode, setEditMode] = useState(false);
+
+    const { editMode, setEditMode, editingEventId, editCounter } = useContext(EditModeContext);
     
     
     useEffect(() => {
-        console.log(editingEventId);
         if(editingEventId) {
-            console.log('INSIDE IF STATEMENT')
-            console.log(editingEventId);
             editEvent();
         }
     }, [editCounter])
@@ -23,9 +22,7 @@ let CreateAndEditEvent = ({ editingEventId, editCounter , saveChanges, updateEve
     function editEvent() {
         setEditMode(!editMode);
 
-        // let event = events.find(event => event.id === editingEventId);
         let event = JSON.parse(localStorage.getItem("events")).find(event => event.id === editingEventId);
-        console.log(event);
         setEventTitle(event.eventTitle);
         setEventStart(event.eventStart);
         setEventEnd(event.eventEnd);
