@@ -10,7 +10,7 @@ let CreateAndEditEvent = ({ saveChanges, updateEvents, setEvents}) => {
     let [eventStart, setEventStart] = useState("");
     let [eventEnd, setEventEnd] = useState("");
 
-    const { editMode, setEditMode, editingEventId, editCounter } = useContext(EditModeContext);
+    const { editMode, setEditMode, editingEventId, setEditingEventId, editCounter } = useContext(EditModeContext);
     
     
     useEffect(() => {
@@ -20,15 +20,16 @@ let CreateAndEditEvent = ({ saveChanges, updateEvents, setEvents}) => {
     }, [editCounter])
 
     function editEvent() {
-        setEditMode(!editMode);
+        // setEditMode(!editMode);
 
         let event = JSON.parse(localStorage.getItem("events")).find(event => event.id === editingEventId);
         setEventTitle(event.eventTitle);
         setEventStart(event.eventStart);
         setEventEnd(event.eventEnd);
 
-        if(editMode) {
+        if(!editMode) {
             clearInputs();
+            setEditingEventId("");
         }
     }
 
@@ -43,6 +44,7 @@ let CreateAndEditEvent = ({ saveChanges, updateEvents, setEvents}) => {
 
         setEvents(newArray);
         clearInputs();
+        setEditingEventId("");
     }
 
 

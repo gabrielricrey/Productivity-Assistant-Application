@@ -39,7 +39,7 @@ const StartPage = () => {
         <div className="kalle">
             <h3>Test</h3>
             <ul>
-                {JSON.parse(localStorage.getItem("todos"))
+                {JSON.parse(localStorage.getItem("todos")) && JSON.parse(localStorage.getItem("todos"))
                 .filter(todo => todo.userid === JSON.parse(sessionStorage.getItem("user")).username)
                 .reverse()
                 .slice(0,3)

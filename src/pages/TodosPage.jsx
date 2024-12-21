@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import "./TodosPage.css";
 
 let TodosPage = () => {
     let [user, setUser] = useState(null);
@@ -138,108 +139,110 @@ let TodosPage = () => {
     if (!user) return null;
 
     return (
-        <div style={{ maxWidth: "600px", margin: "20px auto", fontFamily: "Arial", textAlign: "center" }}>
-            <h2>{todoId ? "Redigera ärende" : "Lägg till nytt ärende"}</h2>
+        <div className="todos-container">
+            
 
-            <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <input
-                    type="text"
-                    placeholder="Titel"
-                    value={currentTodo.title}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, title: e.target.value, userid: JSON.parse(sessionStorage.getItem("user")).username })}
-                />
-                <textarea
-                    placeholder="Beskrivning"
-                    value={currentTodo.description}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, description: e.target.value })}
-                />
-                <select
-                    value={currentTodo.isDone ? "true" : "false"}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, isDone: e.target.value === "true" })}
-                >
-                    <option value="false">Ej utförd</option>
-                    <option value="true">Utförd</option>
-                </select>
-                <input
-                    type="text"
-                    placeholder="Tidsestimat"
-                    value={currentTodo.timeEstimate}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, timeEstimate: e.target.value })}
-                />
-                <select
-                    value={currentTodo.category}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, category: e.target.value })}
-                >
-                    {categories.map(category => (
-                        <option key={category} value={category}>{category}</option>
-                    ))}
-                </select>
-                <input
-                    type="date"
-                    value={currentTodo.deadline}
-                    onChange={(e) => setCurrentTodo({ ...currentTodo, deadline: e.target.value })}
-                />
-                <button type="submit">
-                    {todoId ? "Uppdatera ärende" : "Lägg till ärende"}
-                </button>
-            </form>
-
-            <div>
-                <h3>Filtrera</h3>
-                <label>
+                <form onSubmit={onSubmit} className="create-todo">
+                <h3>{todoId ? "Redigera ärende" : "Lägg till nytt ärende"}</h3>
                     <input
-                        type="checkbox"
-                        checked={filter.isDone === true}
-                        onChange={() => handleFilterChange("isDone", filter.isDone === true ? null : true)}
+                        type="text"
+                        placeholder="Titel"
+                        value={currentTodo.title}
+                        onChange={(e) => setCurrentTodo({ ...currentTodo, title: e.target.value, userid: JSON.parse(sessionStorage.getItem("user")).username })}
                     />
-                    Utförd
-                </label>
-                <label>
+                    <textarea
+                        placeholder="Beskrivning"
+                        value={currentTodo.description}
+                        onChange={(e) => setCurrentTodo({ ...currentTodo, description: e.target.value })}
+                    />
+                    <select
+                        value={currentTodo.isDone ? "true" : "false"}
+                        onChange={(e) => setCurrentTodo({ ...currentTodo, isDone: e.target.value === "true" })}
+                    >
+                        <option value="false">Ej utförd</option>
+                        <option value="true">Utförd</option>
+                    </select>
                     <input
-                        type="checkbox"
-                        checked={filter.isDone === false}
-                        onChange={() => handleFilterChange("isDone", filter.isDone === false ? null : false)}
+                        type="text"
+                        placeholder="Tidsestimat"
+                        value={currentTodo.timeEstimate}
+                        onChange={(e) => setCurrentTodo({ ...currentTodo, timeEstimate: e.target.value })}
                     />
-                    Ej utförd
-                </label>
+                    <select
+                        value={currentTodo.category}
+                        onChange={(e) => setCurrentTodo({ ...currentTodo, category: e.target.value })}
+                    >
+                        {categories.map(category => (
+                            <option key={category} value={category}>{category}</option>
+                        ))}
+                    </select>
+                    <input
+                        type="date"
+                        value={currentTodo.deadline}
+                        onChange={(e) => setCurrentTodo({ ...currentTodo, deadline: e.target.value })}
+                    />
+                    <button type="submit">
+                        {todoId ? "Uppdatera ärende" : "Lägg till ärende"}
+                    </button>
+                </form>
 
-                <h4>Kategorier</h4>
-                {categories.map(category => (
-                    <label key={category}>
+                <div>
+                    <h3>Filtrera</h3>
+                    <label>
                         <input
                             type="checkbox"
-                            checked={filter.categories.includes(category)}
-                            onChange={() => handleCategoryChange(category)}
+                            checked={filter.isDone === true}
+                            onChange={() => handleFilterChange("isDone", filter.isDone === true ? null : true)}
                         />
-                        {category}
+                        Utförd
                     </label>
-                ))}
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={filter.isDone === false}
+                            onChange={() => handleFilterChange("isDone", filter.isDone === false ? null : false)}
+                        />
+                        Ej utförd
+                    </label>
 
-                <h4>Sortera</h4>
-                <button className="deadline-btn" onClick={() => handleSortChange("deadline")}>Sortera efter Deadline</button>
-                <button onClick={() => handleSortChange("timeEstimate")}>Sortera efter Tidsestimat</button>
-                <button onClick={() => handleSortChange("isDone")}>Sortera efter Status</button>
-            </div>
-
-            {!todoId && (
-                <ul className="todo-card-container">
-                    {filteredTodos.map(todo => (
-                        <li className="todo-card" key={todo.id}>
-                            <h4>{todo.title}</h4>
-                            <p>{todo.description}</p>
-                            <p>{todo.isDone ? "Utförd" : "Ej utförd"}</p>
-                            <p>{todo.timeEstimate}</p>
-                            <p>{todo.category}</p>
-                            <p>{todo.deadline}</p>
-                            <button onClick={() => navigate(`/todos/${todo.id}`)}>Redigera</button>
-                            <button onClick={() => toggleCompletion(todo.id)}>
-                                {todo.isDone ? "Markera som Ej utförd" : "Markera som Utförd"}
-                            </button>
-                            <button onClick={() => deleteTodo(todo.id)}>Ta bort</button>
-                        </li>
+                    <h4>Kategorier</h4>
+                    {categories.map(category => (
+                        <label key={category}>
+                            <input
+                                type="checkbox"
+                                checked={filter.categories.includes(category)}
+                                onChange={() => handleCategoryChange(category)}
+                            />
+                            {category}
+                        </label>
                     ))}
-                </ul>
-            )}
+
+                    <h4>Sortera</h4>
+                    <button className="deadline-btn" onClick={() => handleSortChange("deadline")}>Sortera efter Deadline</button>
+                    <button onClick={() => handleSortChange("timeEstimate")}>Sortera efter Tidsestimat</button>
+                    <button onClick={() => handleSortChange("isDone")}>Sortera efter Status</button>
+                </div>
+
+                {!todoId && (
+                    <ul className="todo-card-container">
+                        {filteredTodos.map(todo => (
+                            <li className="todo-card" key={todo.id}>
+                                <h4>{todo.title}</h4>
+                                <p>{todo.description}</p>
+                                <p>{todo.isDone ? "Utförd" : "Ej utförd"}</p>
+                                <p>{todo.timeEstimate}</p>
+                                <p>{todo.category}</p>
+                                <p>{todo.deadline}</p>
+                                <button onClick={() => navigate(`/todos/${todo.id}`)}>Redigera</button>
+                                <button onClick={() => toggleCompletion(todo.id)}>
+                                    {todo.isDone ? "Markera som Ej utförd" : "Markera som Utförd"}
+                                </button>
+                                <button onClick={() => deleteTodo(todo.id)}>Ta bort</button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            
         </div>
     )
 }

@@ -4,11 +4,12 @@ import { EditModeContext } from "../context/EditModeContext";
 let Event = ({ event, deleteEvent }) => {
 
     function initializeEditEvent() {
-        setEditingEventId(event.id)
+        setEditingEventId(event.id);
+        setEditMode(!editMode);
         setEditCounter(x => x + 1)
     }
 
-    const { editMode, setEditingEventId, setEditCounter } = useContext(EditModeContext);
+    const { editMode, setEditMode, setEditingEventId, setEditCounter } = useContext(EditModeContext);
 
     return (
 

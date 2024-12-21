@@ -1,0 +1,34 @@
+.todos-container {
+    margin-top: 52px;
+    width: 100%;
+    position: relative;
+    display: flex;
+}
+
+.create-todo {
+    padding: 1rem;
+    width: 450px;
+    height: 100vh;
+    border-right: 1px solid white;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-todo h3 {
+    margin: 1rem 0;
+}
+
+.create-todo input, .create-todo select, .create-todo textarea {
+    padding: .4rem;
+    border-radius: 5px;
+}
+
+.create-todo button {
+    padding: .7rem .2rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: .2rem;
+    background: rgb(23, 174, 23);
+    color: white;
+}
